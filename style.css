@@ -175,3 +175,76 @@ body {
     color: #ffebee;
     box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
 }
+
+/* TAMBAHKAN KODE INI DI BARIS PALING BAWAH FILE STYLE.CSS ANDA: */
+
+/* Struktur Hiasan Radar Animasi */
+.radar-container {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.radar-icon {
+    font-size: 32px;
+    z-index: 2;
+}
+
+.radar-pulse {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: transparent;
+    border: 3px solid #00c6ff;
+    border-radius: 50%;
+    animation: pulseRadar 2s infinite ease-out;
+    opacity: 0;
+    z-index: 1;
+}
+
+@keyframes pulseRadar {
+    0% { transform: scale(0.6); opacity: 0.8; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Kotak statistik mini hiasan */
+.mini-stats {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.stat-item {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.stat-item small {
+    display: block;
+    color: #b0bec5;
+    font-size: 11px;
+}
+
+/* Tombol kembali */
+.btn-back {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #b0bec5;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-family: inherit;
+}
+.btn-back:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+}
