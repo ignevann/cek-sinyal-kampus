@@ -37,7 +37,7 @@ database.ref('ruangan').on('value', (snapshot) => {
     }
 });
 
-// 3. Fungsi Menguji Kecepatan Internet saat Tombol Diklik
+// GANTIKAN SELEURUH FUNGSI checkConnection LAMA ANDA DENGAN INI:
 async function checkConnection() {
     const btn = document.getElementById('btn-check');
     const downloadEl = document.getElementById('net-download');
@@ -53,27 +53,28 @@ async function checkConnection() {
 
     const startTime = performance.now();
     try {
-        // Menguji latensi dengan hit file eksternal yang aman dari cache
-        await fetch('https://google.com' + startTime, { mode: 'no-cors' });
+        // PERBAIKAN UTAMA: Menggunakan URL global publik yang mendukung CORS HTTPS secara penuh
+        await fetch('https://httpbin.org', { method: 'HEAD', cache: 'no-store' });
         const endTime = performance.now();
         const latency = Math.round(endTime - startTime);
         latencyEl.innerText = `${latency} ms`;
 
-        // Menghitung Download Speed (bawaan browser)
+        // Mengambil kecepatan unduh asli dari sistem browser
         let downloadSpeed = 0;
         if (navigator.connection && navigator.connection.downlink) {
             downloadSpeed = navigator.connection.downlink;
         } else {
+            // Estimasi jika fitur browser tidak aktif
             downloadSpeed = (latency < 100) ? 18 : 3; 
         }
         downloadEl.innerText = `${downloadSpeed} Mbps`;
 
-        // Simulasi hitung paket data loss dari respon latensi
-        const packetLoss = latency > 150 ? "2.5%" : "0.0%";
+        // Simulasi packet loss rasional berdasarkan latensi jaringan
+        const packetLoss = latency > 180 ? "2.5%" : "0.0%";
         lossEl.innerText = packetLoss;
 
-        // Logika penentu status koneksi pengguna saat ini
-        if (downloadSpeed >= 5 && latency < 100) {
+        // Penentu indikator visual status koneksi mahasiswa
+        if (downloadSpeed >= 3 && latency < 150) {
             signalEl.innerHTML = `█████ <span class="status-badge status-good" style="display:inline; padding:2px 6px;">Good</span>`;
             starsEl.innerText = "⭐⭐⭐⭐⭐";
             alertEl.innerText = "✓ Suitable for online quiz";
@@ -86,7 +87,7 @@ async function checkConnection() {
         }
 
     } catch (error) {
-        // Fallback jika tidak ada akses atau terhalang koneksinya
+        // Jika gagal koneksi total ke luar internet
         signalEl.innerHTML = `░░░░░ <span class="status-badge status-poor" style="display:inline; padding:2px 6px;">Offline</span>`;
         latencyEl.innerText = "-";
         downloadEl.innerText = "0 Mbps";
@@ -99,4 +100,3 @@ async function checkConnection() {
     btn.innerText = "Cek Koneksi Jaringan";
     btn.disabled = false;
 }
-
