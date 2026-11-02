@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - Sinyal FTUI</title>
+    <style>
+        body { font-family: 'Courier New', monospace; padding: 20px; background-color: #f0f4f8; display: flex; justify-content: center; align-items: center; min-height: 90vh; }
+        .admin-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); width: 100%; max-width: 400px; }
+        h2 { text-align: center; margin-bottom: 25px; color: #333; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #555; }
+        select, button { width: 100%; padding: 12px; font-size: 15px; border-radius: 6px; font-family: inherit; }
+        select { border: 1px solid #ccc; background-color: #fff; }
+        button { background-color: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background 0.2s; }
+        button:hover { background-color: #218838; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #007bff; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-box">
+        <h2>Panel Update Sinyal</h2>
+        
+        <div class="form-group">
+            <label for="pilih-ruangan">Pilih Lokasi Kampus:</label>
+            <select id="pilih-ruangan">
+                <option value="area_b201">Area B-201</option>
+                <option value="library_lt2">Library Lt. 2</option>
+                <option value="lobby_eng">Lobby Engineering</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="pilih-status">Status Sinyal Baru:</label>
+            <select id="pilih-status">
+                <option value="Good">Good (Bagus)</option>
+                <option value="Moderate">Moderate (Cukup)</option>
+                <option value="Poor">Poor (Buruk)</option>
+            </select>
+        </div>
+
+        <button onclick="updateSinyalFirebase()">Simpan Perubahan Data</button>
+        
+        <a href="index.html" class="back-link">← Lihat Halaman Utama Mahasiswa</a>
+    </div>
+
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgiiVozqnsuk5cSoxnf1ARAUW2CM_IPiQ",
+            authDomain: "://firebaseapp.com",
+            databaseURL: "https://firebaseio.com",
+            projectId: "cek-koneksi-ftui",
+            storageBucket: "cek-koneksi-ftui.firebasestorage.app",
+            messagingSenderId: "739339154",
+            appId: "1:739339154:web:a0b804ec40af66961def4b"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function updateSinyalFirebase() {
+            const ruanganId = document.getElementById('pilih-ruangan').value;
+            const statusBaru = document.getElementById('pilih-status').value;
+
+            database.ref('ruangan/' + ruanganId).update({
+                status: statusBaru
+            })
+            .then(() => {
+                alert("Berhasil! Status di database dan web mahasiswa langsung ter-update.");
+            })
+            .catch((error) => {
+                alert("Gagal merubah data: " + error.message);
+            });
+        }
+    </script>
+</body>
+</html>

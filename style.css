@@ -1,0 +1,141 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #f0f4f8;
+    color: #333;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+}
+
+#btn-check {
+    width: 100%;
+    padding: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,123,255,0.15);
+    transition: background 0.2s;
+}
+
+#btn-check:hover {
+    background-color: #0056b3;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.label {
+    color: #555;
+}
+
+.readiness-section {
+    margin-top: 20px;
+    text-align: center;
+    border-top: 1px dashed #ddd;
+    padding-top: 15px;
+}
+
+.section-title {
+    margin: 0 0 5px 0;
+    font-weight: bold;
+    font-size: 14px;
+    color: #444;
+}
+
+.stars {
+    font-size: 22px;
+    margin: 5px 0 15px 0;
+}
+
+.alert {
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.alert-warning {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.recommendation-section {
+    margin-top: 25px;
+}
+
+/* Penata susunan daftar ruangan biar sejajar rapi */
+.recommendation-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #fdfdfd;
+    border: 1px solid #eef2f5;
+    border-radius: 8px;
+    margin-top: 8px;
+    list-style-type: none;
+}
+
+.room-name {
+    font-weight: 500;
+}
+
+/* Gaya badge status bulat lonjong di sisi kanan */
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+}
+
+.status-good {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-mod {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-poor {
+    background-color: #f8d7da;
+    color: #721c24;
+}

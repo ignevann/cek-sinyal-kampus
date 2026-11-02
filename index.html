@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Koneksi Otomatis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Tombol untuk memulai tes -->
+        <button id="btn-check" onclick="checkConnection()">Cek Koneksi Jaringan</button>
+
+        <!-- KOTAK INDIKATOR KONEKSI MAHASISWA -->
+        <div class="card">
+            <div class="card-header">
+                <span>&lt;/&gt; Live Network Status</span>
+            </div>
+            <div class="card-content">
+                <div class="info-row">
+                    <span class="label">Signal</span>
+                    <span class="value" id="net-signal">█████ <span class="status-badge status-good" style="display:inline; padding: 2px 6px;">Ready</span></span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Latency</span>
+                    <span class="value" id="net-latency">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Packet Loss</span>
+                    <span class="value" id="net-loss">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Download</span>
+                    <span class="value" id="net-download">-</span>
+                </div>
+                
+                <div class="readiness-section">
+                    <p class="section-title">Assessment Readiness</p>
+                    <p class="stars" id="net-stars">⭐⭐⭐⭐⭐</p>
+                </div>
+                
+                <div class="alert alert-success" id="net-alert">
+                    Silakan klik tombol di atas untuk menguji koneksi Anda saat ini.
+                </div>
+
+                <!-- DAFTAR REKOMENDASI DAERAH (DITARIK DARI FIREBASE) -->
+                <div class="recommendation-section" id="net-recommendation">
+                    <p class="section-title">Recommended:</p>
+                    <ul id="ruangan-list" style="padding: 0; margin: 0;">
+                        <!-- Data dari Firebase akan muncul otomatis di sini -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="admin.html" style="color: #888; text-decoration: none; font-size: 13px;">Masuk ke Panel Admin (Update Ruangan) →</a>
+        </div>
+    </div>
+
+    <!-- Panggil Library Firebase SDK Core dan Realtime Database -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+
+    <!-- Menghubungkan ke file logika Javascript Anda -->
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
