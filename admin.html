@@ -3,44 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin - Sinyal FTUI</title>
+    <title>Panel Admin - Secure Sinyal FTUI</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body { font-family: 'Courier New', monospace; padding: 20px; background-color: #f0f4f8; display: flex; justify-content: center; align-items: center; min-height: 90vh; }
-        .admin-box { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); width: 100%; max-width: 400px; }
-        h2 { text-align: center; margin-bottom: 25px; color: #333; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; color: #555; }
-        select, button { width: 100%; padding: 12px; font-size: 15px; border-radius: 6px; font-family: inherit; }
-        select { border: 1px solid #ccc; background-color: #fff; }
-        button { background-color: #28a745; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background 0.2s; }
-        button:hover { background-color: #218838; }
-        .back-link { display: block; text-align: center; margin-top: 20px; color: #007bff; text-decoration: none; font-size: 14px; }
+        .admin-wrapper { width: 100%; max-width: 400px; margin: auto; margin-top: 10vh; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #00c6ff; }
+        select, input { width: 100%; padding: 12px; font-size: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; }
+        select option { background: #203a43; color: white; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #00c6ff; text-decoration: none; font-size: 14px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="admin-box">
-        <h2>Panel Update Sinyal</h2>
+    <div class="admin-wrapper">
         
-        <div class="form-group">
-            <label for="pilih-ruangan">Pilih Lokasi Kampus:</label>
-            <select id="pilih-ruangan">
-                <option value="area_b201">Area B-201</option>
-                <option value="library_lt2">Library Lt. 2</option>
-                <option value="lobby_eng">Lobby Engineering</option>
-            </select>
+        <!-- KOTAK 1: LOGIN PASSWORD -->
+        <div class="card" id="login-box">
+            <div class="card-header">&lt;/&gt; ADMIN AUTHENTICATION</div>
+            <h2>Masuk Panel Admin</h2>
+            <div class="form-group">
+                <label for="admin-pass">Masukkan Kata Sandi:</label>
+                <input type="password" id="admin-pass" placeholder="Ketik kata sandi di sini...">
+            </div>
+            <button id="btn-check" style="margin-bottom:0;" onclick="verifikasiLogin()">Login Admin</button>
+            <p id="login-error" style="color: #ff8a80; text-align:center; font-size:14px; display:none; margin-top:10px;">⚠️ Password salah!</p>
         </div>
 
-        <div class="form-group">
-            <label for="pilih-status">Status Sinyal Baru:</label>
-            <select id="pilih-status">
-                <option value="Good">Good (Bagus)</option>
-                <option value="Moderate">Moderate (Cukup)</option>
-                <option value="Poor">Poor (Buruk)</option>
-            </select>
-        </div>
+        <!-- KOTAK 2: FORM UPDATE (TERSEMBUNYI SEBELUM LOGIN) -->
+        <div class="card" id="control-box" style="display: none;">
+            <div class="card-header">&lt;/&gt; PANEL CONTROL AKTIF</div>
+            <h2>Update Sinyal Kampus</h2>
+            
+            <div class="form-group">
+                <label for="pilih-ruangan">Pilih Lokasi Kampus:</label>
+                <select id="pilih-ruangan">
+                    <option value="area_b201">Area B-201</option>
+                    <option value="library_lt2">Library Lt. 2</option>
+                    <option value="lobby_eng">Lobby Engineering</option>
+                </select>
+            </div>
 
-        <button onclick="updateSinyalFirebase()">Simpan Perubahan Data</button>
+            <div class="form-group">
+                <label for="pilih-status">Status Sinyal Baru:</label>
+                <select id="pilih-status">
+                    <option value="Good">Good (Bagus)</option>
+                    <option value="Moderate">Moderate (Cukup)</option>
+                    <option value="Poor">Poor (Buruk)</option>
+                </select>
+            </div>
+
+            <button id="btn-check" style="margin-bottom:0; background: linear-gradient(45deg, #11998e, #38ef7d); box-shadow: 0 4px 15px rgba(56,239,125,0.4);" onclick="updateSinyalFirebase()">Simpan Perubahan</button>
+        </div>
         
         <a href="index.html" class="back-link">← Lihat Halaman Utama Mahasiswa</a>
     </div>
@@ -62,6 +76,20 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // Fungsi mencocokkan password rahasia admin
+        function verifikasiLogin() {
+            const inputPass = document.getElementById('admin-pass').value;
+            const passwordBenar = "adminftui2026"; // <=== SILAKAN GANTI PASSWORD ANDA DI SINI
+
+            if (inputPass === passwordBenar) {
+                document.getElementById('login-box').style.display = 'none';
+                document.getElementById('control-box').style.display = 'block';
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        }
+
+        // Fungsi mengubah status di database secara remote
         function updateSinyalFirebase() {
             const ruanganId = document.getElementById('pilih-ruangan').value;
             const statusBaru = document.getElementById('pilih-status').value;
@@ -70,10 +98,10 @@
                 status: statusBaru
             })
             .then(() => {
-                alert("Berhasil! Status di database dan web mahasiswa langsung ter-update.");
+                alert("Berhasil! Status di database dan web mahasiswa langsung ter-update secara real-time.");
             })
             .catch((error) => {
-                alert("Gagal merubah data: " + error.message);
+                alert("Gagal: " + error.message);
             });
         }
     </script>
