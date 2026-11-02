@@ -100,3 +100,24 @@ async function checkConnection() {
     btn.innerText = "Cek Koneksi Jaringan";
     btn.disabled = false;
 }
+
+// TAMBAHKAN KODE INI DI BARIS PALING BAWAH FILE SCRIPT.JS ANDA:
+
+function masukKeAplikasi() {
+    const namaInput = document.getElementById('user-name').value;
+    const sapaanTeks = document.getElementById('sapaan-user');
+    
+    // Jika nama tidak diisi, gunakan panggilan default "Mahasiswa FTUI"
+    const namaUser = namaInput.trim() !== "" ? namaInput : "Mahasiswa FTUI";
+    
+    sapaanTeks.innerText = `👋 Halo, ${namaUser}!`;
+    
+    // Efek transisi menyembunyikan welcome dan memunculkan app cek sinyal
+    document.getElementById('welcome-box').style.display = 'none';
+    document.getElementById('main-app-box').style.display = 'block';
+}
+
+function kembaliKeWelcome() {
+    document.getElementById('welcome-box').style.display = 'block';
+    document.getElementById('main-app-box').style.display = 'none';
+}
