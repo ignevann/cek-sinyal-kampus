@@ -8,17 +8,16 @@
     <style>
         .admin-wrapper { width: 100%; max-width: 400px; margin: auto; margin-top: 10vh; }
         .form-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; color: #00c6ff; }
-        select, input { width: 100%; padding: 12px; font-size: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; }
-        select option { background: #203a43; color: white; }
-        .back-link { display: block; text-align: center; margin-top: 20px; color: #00c6ff; text-decoration: none; font-size: 14px; font-weight: bold; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; }
+        select, input { width: 100%; padding: 12px; font-size: 15px; border-radius: 8px; border: 1px solid #ccc; background: #fff; color: #333; box-sizing: border-box; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #007bff; text-decoration: none; font-size: 14px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="admin-wrapper">
         
-        <!-- KOTAK 1: LOGIN PASSWORD -->
+        <!-- KOTAK 1: AUTHENTICATION -->
         <div class="card" id="login-box">
             <div class="card-header">&lt;/&gt; ADMIN AUTHENTICATION</div>
             <h2>Masuk Panel Admin</h2>
@@ -26,11 +25,11 @@
                 <label for="admin-pass">Masukkan Kata Sandi:</label>
                 <input type="password" id="admin-pass" placeholder="Ketik kata sandi di sini...">
             </div>
-            <button id="btn-login" style="margin-bottom:0;" onclick="verifikasiLogin()">Login Admin</button>
-            <p id="login-error" style="color: #ff8a80; text-align:center; font-size:14px; display:none; margin-top:10px;">⚠️ Password salah!</p>
+            <button class="btn-primary" onclick="verifikasiLogin()">Login Admin</button>
+            <p id="login-error" style="color: #c62828; text-align:center; font-size:14px; display:none; margin-top:10px; font-weight:bold;">⚠️ Password salah!</p>
         </div>
 
-        <!-- KOTAK 2: FORM UPDATE (TERSEMBUNYI SEBELUM LOGIN) -->
+        <!-- KOTAK 2: PANEL UTAMA (TERSEMBUNYI DEFAULT) -->
         <div class="card" id="control-box" style="display: none;">
             <div class="card-header">&lt;/&gt; PANEL CONTROL AKTIF</div>
             <h2>Update Sinyal Kampus</h2>
@@ -38,11 +37,16 @@
             <div class="form-group">
                 <label for="pilih-ruangan">Pilih Lokasi Kampus:</label>
                 <select id="pilih-ruangan">
-                    <!-- Daftar Ruangan Lengkap FTUI -->
                     <option value="gedung_k_lt1">Gedung K Lantai 1</option>
                     <option value="gedung_k_lt2">Gedung K Lantai 2</option>
                     <option value="gedung_s_lt1">Gedung S Lantai 1</option>
                     <option value="gedung_s_lt6">Gedung S Lantai 6</option>
+                    <option value="kantin_ftui">Kantin FTUI (Tektek)</option>
+                    <option value="perpus_ftui">Perpustakaan FTUI</option>
+                    <option value="lobby_mrc">Lobby MRC / Engineering Center</option>
+                    <option value="auditorium_k301">Auditorium K.301</option>
+                    <option value="gedung_dekanat">Gedung Dekanat FTUI</option>
+                    <option value="gedung_g_gkb">Gedung G (Kuliah Bersama)</option>
                 </select>
             </div>
 
@@ -55,21 +59,19 @@
                 </select>
             </div>
 
-            <button id="btn-update" style="margin-bottom:0; background: linear-gradient(45deg, #11998e, #38ef7d); box-shadow: 0 4px 15px rgba(56,239,125,0.4);" onclick="updateSinyalFirebase()">Simpan Perubahan</button>
+            <button class="btn-primary" id="btn-update" onclick="updateSinyalFirebase()">Simpan Perubahan</button>
         </div>
         
         <a href="index.html" class="back-link">← Lihat Halaman Utama Mahasiswa</a>
     </div>
 
-    <!-- PERBAIKAN: Tautan Library Firebase CDN Resmi & Valid -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
 
     <script>
-        // PERBAIKAN: Alamat authDomain & databaseURL yang Valid Sesuai Kredensial Proyek Anda
         const firebaseConfig = {
             apiKey: "AIzaSyAgiiVozqnsuk5cSoxnf1ARAUW2CM_IPiQ",
-            authDomain: "cek-koneksi-ftui.firebaseapp.com",
+            authDomain: "://firebaseapp.com",
             databaseURL: "https://cek-koneksi-ftui-default-rtdb.firebaseio.com",
             projectId: "cek-koneksi-ftui",
             storageBucket: "cek-koneksi-ftui.firebasestorage.app",
@@ -77,14 +79,12 @@
             appId: "1:739339154:web:a0b804ec40af66961def4b"
         };
 
-        // Inisialisasi Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Fungsi mencocokkan password rahasia admin
         function verifikasiLogin() {
             const inputPass = document.getElementById('admin-pass').value;
-            const passwordBenar = "adminftui2026"; // Silakan ganti password Anda di sini jika mau
+            const passwordBenar = "adminftui2026"; // Ganti password di sini jika diinginkan
 
             if (inputPass === passwordBenar) {
                 document.getElementById('login-box').style.display = 'none';
@@ -94,33 +94,23 @@
             }
         }
 
-        // Fungsi mengubah status di database secara remote
         function updateSinyalFirebase() {
             const ruanganId = document.getElementById('pilih-ruangan').value;
             const statusBaru = document.getElementById('pilih-status').value;
             const btn = document.getElementById('btn-update');
 
-            if(btn) {
-                btn.innerText = "Menyimpan...";
-                btn.disabled = true;
-            }
+            if(btn) { btn.innerText = "Menyimpan..."; btn.disabled = true; }
 
             database.ref('ruangan/' + ruanganId).update({
                 status: statusBaru
             })
             .then(() => {
-                alert("Berhasil! Status di database dan web mahasiswa langsung ter-update secara real-time.");
-                if(btn) {
-                    btn.innerText = "Simpan Perubahan";
-                    btn.disabled = false;
-                }
+                alert("Berhasil memperbarui data secara real-time!");
+                if(btn) { btn.innerText = "Simpan Perubahan"; btn.disabled = false; }
             })
             .catch((error) => {
                 alert("Gagal: " + error.message);
-                if(btn) {
-                    btn.innerText = "Simpan Perubahan";
-                    btn.disabled = false;
-                }
+                if(btn) { btn.innerText = "Simpan Perubahan"; btn.disabled = false; }
             });
         }
     </script>
