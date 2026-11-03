@@ -1,8 +1,8 @@
 // 1. Konfigurasi Firebase lengkap milik Anda
 const firebaseConfig = {
     apiKey: "AIzaSyAgiiVozqnsuk5cSoxnf1ARAUW2CM_IPiQ",
-    authDomain: "://firebaseapp.com",
-    databaseURL: "https://firebaseio.com",
+    authDomain: "cek-koneksi-ftui.firebaseapp.com", // Diperbaiki dari "://"
+    databaseURL: "https://cek-koneksi-ftui-default-rtdb.firebaseio.com", // Diperbaiki dari default kosong
     projectId: "cek-koneksi-ftui",
     storageBucket: "cek-koneksi-ftui.firebasestorage.app",
     messagingSenderId: "739339154",
@@ -37,8 +37,7 @@ database.ref('ruangan').on('value', (snapshot) => {
     }
 });
 
-// GANTIKAN SELEURUH FUNGSI checkConnection LAMA ANDA DENGAN INI:
-// GANTIKAN SELEURUH FUNGSI checkConnection DI SCRIPT.JS ANDA DENGAN INI:
+// Fungsi Menguji Koneksi Mahasiswa
 async function checkConnection() {
     const btn = document.getElementById('btn-check');
     const downloadEl = document.getElementById('net-download');
@@ -54,28 +53,23 @@ async function checkConnection() {
 
     const startTime = performance.now();
     try {
-        // PERBAIKAN: Menggunakan CDN Server Jakarta, Indonesia (Sangat cepat & akurat untuk area lokal)
-        await fetch('https://cdnjs.com' + startTime, { method: 'HEAD', cache: 'no-store' });
+        // PERBAIKAN UTAMA: Penulisan tanda miring (/) dan query string (?) yang benar untuk pengetesan latency
+        await fetch('https://cloudflare.com' + startTime, { method: 'HEAD', cache: 'no-store' });
         const endTime = performance.now();
         const latency = Math.round(endTime - startTime);
         latencyEl.innerText = `${latency} ms`;
 
-        // Mengambil kecepatan unduh asli dari sistem browser
         let downloadSpeed = 0;
         if (navigator.connection && navigator.connection.downlink) {
             downloadSpeed = navigator.connection.downlink;
         } else {
-            // Estimasi rasional berbasis kedekatan server Indonesia
             downloadSpeed = (latency < 40) ? 24 : 5; 
         }
         downloadEl.innerText = `${downloadSpeed} Mbps`;
 
-        // Karena server sudah di Indo, standar kestabilan disesuaikan:
-        // Latency di bawah 60ms di Indonesia sudah sangat bagus dan stabil
         const packetLoss = latency > 100 ? "1.5%" : "0.0%";
         lossEl.innerText = packetLoss;
 
-        // Logika indikator visual (Khas standar lokal Indonesia)
         if (latency < 60) {
             signalEl.innerHTML = `█████ <span class="status-badge status-good" style="display:inline; padding:2px 6px;">Good</span>`;
             starsEl.innerText = "⭐⭐⭐⭐⭐";
@@ -89,7 +83,6 @@ async function checkConnection() {
         }
 
     } catch (error) {
-        // Jika gagal koneksi total
         signalEl.innerHTML = `░░░░░ <span class="status-badge status-poor" style="display:inline; padding:2px 6px;">Offline</span>`;
         latencyEl.innerText = "-";
         downloadEl.innerText = "0 Mbps";
@@ -103,19 +96,14 @@ async function checkConnection() {
     btn.disabled = false;
 }
 
-
-// TAMBAHKAN KODE INI DI BARIS PALING BAWAH FILE SCRIPT.JS ANDA:
-
+// Logika Fitur Selamat Datang (Sapaan Nama)
 function masukKeAplikasi() {
     const namaInput = document.getElementById('user-name').value;
     const sapaanTeks = document.getElementById('sapaan-user');
-    
-    // Jika nama tidak diisi, gunakan panggilan default "Mahasiswa FTUI"
     const namaUser = namaInput.trim() !== "" ? namaInput : "Mahasiswa FTUI";
     
     sapaanTeks.innerText = `👋 Halo, ${namaUser}!`;
     
-    // Efek transisi menyembunyikan welcome dan memunculkan app cek sinyal
     document.getElementById('welcome-box').style.display = 'none';
     document.getElementById('main-app-box').style.display = 'block';
 }
@@ -123,4 +111,4 @@ function masukKeAplikasi() {
 function kembaliKeWelcome() {
     document.getElementById('welcome-box').style.display = 'block';
     document.getElementById('main-app-box').style.display = 'none';
-}
+} 
