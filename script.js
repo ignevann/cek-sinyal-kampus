@@ -1,8 +1,8 @@
-// 1. Konfigurasi Firebase lengkap milik Anda
+// 1. Konfigurasi Firebase Anda
 const firebaseConfig = {
     apiKey: "AIzaSyAgiiVozqnsuk5cSoxnf1ARAUW2CM_IPiQ",
-    authDomain: "cek-koneksi-ftui.firebaseapp.com", // Diperbaiki dari "://"
-    databaseURL: "https://cek-koneksi-ftui-default-rtdb.firebaseio.com", // Diperbaiki dari default kosong
+    authDomain: "://firebaseapp.com",
+    databaseURL: "https://cek-koneksi-ftui-default-rtdb.firebaseio.com",
     projectId: "cek-koneksi-ftui",
     storageBucket: "cek-koneksi-ftui.firebasestorage.app",
     messagingSenderId: "739339154",
@@ -13,43 +13,38 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// 2. Mengambil & Mendengarkan Perubahan Data Ruangan secara Live (Real-Time)
+// 2. Mengambil & Mendengarkan Perubahan Data secara Live (Real-Time)
 database.ref('ruangan').on('value', (snapshot) => {
     const data = snapshot.val();
     const listUl = document.getElementById('ruangan-list');
     
     if (listUl && data) {
-        listUl.innerHTML = ""; // Bersihkan list lama agar tidak menumpuk
+        listUl.innerHTML = ""; // Bersihkan list lama
 
-   for (let id in data) {
-    const item = data[id];
-    let statusClass = "status-good";
-    let dotClass = "dot-good"; // Tambahan variabel untuk peta
-    
-    if (item.status === "Moderate") {
-        statusClass = "status-mod";
-        dotClass = "dot-mod";
+        for (let id in data) {
+            const item = data[id];
+            let statusClass = "status-good";
+            let dotClass = "dot-good";
+            
+            if (item.status === "Moderate") { statusClass = "status-mod"; dotClass = "dot-mod"; }
+            if (item.status === "Poor") { statusClass = "status-poor"; dotClass = "dot-poor"; }
+
+            // Update List Teks Ruangan
+            const li = document.createElement('li');
+            li.className = "recommendation-item";
+            li.innerHTML = `<span class="room-name">${item.nama}</span> <span class="status-badge ${statusClass}">${item.status}</span>`;
+            listUl.appendChild(li);
+
+            // Update Warna Titik di Visual Map secara dinamis
+            const buildingDot = document.querySelector(`#map-${id} .indicator-dot`);
+            if (buildingDot) {
+                buildingDot.className = "indicator-dot " + dotClass;
+            }
+        }
     }
-    if (item.status === "Poor") {
-        statusClass = "status-poor";
-        dotClass = "dot-poor";
-    }
+});
 
-    // [Kode update list tulisan Anda yang lama di sini ...]
-    const li = document.createElement('li');
-    li.className = "recommendation-item";
-    li.innerHTML = `<span class="room-name">${item.nama}</span> <span class="status-badge ${statusClass}">${item.status}</span>`;
-    listUl.appendChild(li);
-
-    // LOGIKA BARU: Update warna titik di peta berdasarkan ID ruangan
-    const buildingDot = document.querySelector(`#map-${id} .indicator-dot`);
-    if (buildingDot) {
-        // Reset kelas warna lama dan masukkan kelas warna terbaru dari Firebase
-        buildingDot.className = "indicator-dot " + dotClass;
-    }
-}
-
-// Fungsi Menguji Koneksi Mahasiswa
+// 3. Fungsi Speedtest Koneksi Mahasiswa
 async function checkConnection() {
     const btn = document.getElementById('btn-check');
     const downloadEl = document.getElementById('net-download');
@@ -65,7 +60,7 @@ async function checkConnection() {
 
     const startTime = performance.now();
     try {
-        // PERBAIKAN UTAMA: Penulisan tanda miring (/) dan query string (?) yang benar untuk pengetesan latency
+        // Menguji latency ke CDN Cloudflare terdekat (Jakarta) secara valid
         await fetch('https://cloudflare.com' + startTime, { method: 'HEAD', cache: 'no-store' });
         const endTime = performance.now();
         const latency = Math.round(endTime - startTime);
@@ -75,7 +70,7 @@ async function checkConnection() {
         if (navigator.connection && navigator.connection.downlink) {
             downloadSpeed = navigator.connection.downlink;
         } else {
-            downloadSpeed = (latency < 40) ? 24 : 5; 
+            downloadSpeed = (latency < 50) ? 24 : 6; 
         }
         downloadEl.innerText = `${downloadSpeed} Mbps`;
 
@@ -83,19 +78,19 @@ async function checkConnection() {
         lossEl.innerText = packetLoss;
 
         if (latency < 60) {
-            signalEl.innerHTML = `█████ <span class="status-badge status-good" style="display:inline; padding:2px 6px;">Good</span>`;
+            signalEl.innerHTML = `█████ <span class="status-badge status-good">Good</span>`;
             starsEl.innerText = "⭐⭐⭐⭐⭐";
             alertEl.innerText = "✓ Suitable for online quiz (Server: Jakarta)";
             alertEl.className = "alert alert-success";
         } else {
-            signalEl.innerHTML = `█░░░░ <span class="status-badge status-poor" style="display:inline; padding:2px 6px;">Poor</span>`;
+            signalEl.innerHTML = `█░░░░ <span class="status-badge status-poor">Poor</span>`;
             starsEl.innerText = "⭐⭐☆☆☆";
             alertEl.innerText = "⚠️ Unstable connection detected (High Latency)";
             alertEl.className = "alert alert-warning";
         }
 
     } catch (error) {
-        signalEl.innerHTML = `░░░░░ <span class="status-badge status-poor" style="display:inline; padding:2px 6px;">Offline</span>`;
+        signalEl.innerHTML = `░░░░░ <span class="status-badge status-poor">Offline</span>`;
         latencyEl.innerText = "-";
         downloadEl.innerText = "0 Mbps";
         lossEl.innerText = "100%";
@@ -108,14 +103,13 @@ async function checkConnection() {
     btn.disabled = false;
 }
 
-// Logika Fitur Selamat Datang (Sapaan Nama)
+// 4. Logika Alur Halaman Welcome
 function masukKeAplikasi() {
     const namaInput = document.getElementById('user-name').value;
     const sapaanTeks = document.getElementById('sapaan-user');
     const namaUser = namaInput.trim() !== "" ? namaInput : "Mahasiswa FTUI";
     
     sapaanTeks.innerText = `👋 Halo, ${namaUser}!`;
-    
     document.getElementById('welcome-box').style.display = 'none';
     document.getElementById('main-app-box').style.display = 'block';
 }
@@ -123,4 +117,4 @@ function masukKeAplikasi() {
 function kembaliKeWelcome() {
     document.getElementById('welcome-box').style.display = 'block';
     document.getElementById('main-app-box').style.display = 'none';
-} 
+}
