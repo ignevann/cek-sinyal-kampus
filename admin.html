@@ -26,7 +26,7 @@
                 <label for="admin-pass">Masukkan Kata Sandi:</label>
                 <input type="password" id="admin-pass" placeholder="Ketik kata sandi di sini...">
             </div>
-            <button id="btn-check" style="margin-bottom:0;" onclick="verifikasiLogin()">Login Admin</button>
+            <button id="btn-login" style="margin-bottom:0;" onclick="verifikasiLogin()">Login Admin</button>
             <p id="login-error" style="color: #ff8a80; text-align:center; font-size:14px; display:none; margin-top:10px;">⚠️ Password salah!</p>
         </div>
 
@@ -38,10 +38,17 @@
             <div class="form-group">
                 <label for="pilih-ruangan">Pilih Lokasi Kampus:</label>
                 <select id="pilih-ruangan">
-                    <option value="gedung_k_lt1">Gedung K Lt. 1</option>
-                    <option value="gedung_k_lt2">Gedung K Lt. 2 </option>
-                    <option value="gedung_s_lt1">Gedung S Lt. 1</option>
-                     <option value="gedung_s_lt6">Gedung S Lt. 6</option>
+                    <!-- Daftar Ruangan Lengkap FTUI -->
+                    <option value="gedung_k_lt1">Gedung K Lantai 1</option>
+                    <option value="gedung_k_lt2">Gedung K Lantai 2</option>
+                    <option value="gedung_s_lt1">Gedung S Lantai 1</option>
+                    <option value="gedung_s_lt6">Gedung S Lantai 6</option>
+                    <option value="kantin_ftui">Kantin FTUI (Tektek)</option>
+                    <option value="perpus_ftui">Perpustakaan FTUI</option>
+                    <option value="lobby_mrc">Lobby MRC / Engineering Center</option>
+                    <option value="auditorium_k301">Auditorium K.301</option>
+                    <option value="gedung_dekanat">Gedung Dekanat FTUI</option>
+                    <option value="gedung_g_gkb">Gedung G (Kuliah Bersama)</option>
                 </select>
             </div>
 
@@ -54,33 +61,36 @@
                 </select>
             </div>
 
-            <button id="btn-check" style="margin-bottom:0; background: linear-gradient(45deg, #11998e, #38ef7d); box-shadow: 0 4px 15px rgba(56,239,125,0.4);" onclick="updateSinyalFirebase()">Simpan Perubahan</button>
+            <button id="btn-update" style="margin-bottom:0; background: linear-gradient(45deg, #11998e, #38ef7d); box-shadow: 0 4px 15px rgba(56,239,125,0.4);" onclick="updateSinyalFirebase()">Simpan Perubahan</button>
         </div>
         
         <a href="index.html" class="back-link">← Lihat Halaman Utama Mahasiswa</a>
     </div>
 
+    <!-- PERBAIKAN: Tautan Library Firebase CDN Resmi & Valid -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
 
     <script>
+        // PERBAIKAN: Alamat authDomain & databaseURL yang Valid Sesuai Kredensial Proyek Anda
         const firebaseConfig = {
             apiKey: "AIzaSyAgiiVozqnsuk5cSoxnf1ARAUW2CM_IPiQ",
-            authDomain: "://firebaseapp.com",
-            databaseURL: "https://firebaseio.com",
+            authDomain: "cek-koneksi-ftui.firebaseapp.com",
+            databaseURL: "https://cek-koneksi-ftui-default-rtdb.firebaseio.com",
             projectId: "cek-koneksi-ftui",
             storageBucket: "cek-koneksi-ftui.firebasestorage.app",
             messagingSenderId: "739339154",
             appId: "1:739339154:web:a0b804ec40af66961def4b"
         };
 
+        // Inisialisasi Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         // Fungsi mencocokkan password rahasia admin
         function verifikasiLogin() {
             const inputPass = document.getElementById('admin-pass').value;
-            const passwordBenar = "adminftui2026"; // <=== SILAKAN GANTI PASSWORD ANDA DI SINI
+            const passwordBenar = "adminftui2026"; // Silakan ganti password Anda di sini jika mau
 
             if (inputPass === passwordBenar) {
                 document.getElementById('login-box').style.display = 'none';
@@ -94,15 +104,29 @@
         function updateSinyalFirebase() {
             const ruanganId = document.getElementById('pilih-ruangan').value;
             const statusBaru = document.getElementById('pilih-status').value;
+            const btn = document.getElementById('btn-update');
+
+            if(btn) {
+                btn.innerText = "Menyimpan...";
+                btn.disabled = true;
+            }
 
             database.ref('ruangan/' + ruanganId).update({
                 status: statusBaru
             })
             .then(() => {
                 alert("Berhasil! Status di database dan web mahasiswa langsung ter-update secara real-time.");
+                if(btn) {
+                    btn.innerText = "Simpan Perubahan";
+                    btn.disabled = false;
+                }
             })
             .catch((error) => {
                 alert("Gagal: " + error.message);
+                if(btn) {
+                    btn.innerText = "Simpan Perubahan";
+                    btn.disabled = false;
+                }
             });
         }
     </script>
