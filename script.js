@@ -21,21 +21,33 @@ database.ref('ruangan').on('value', (snapshot) => {
     if (listUl && data) {
         listUl.innerHTML = ""; // Bersihkan list lama agar tidak menumpuk
 
-        for (let id in data) {
-            const item = data[id];
-            let statusClass = "status-good";
-            
-            if (item.status === "Moderate") statusClass = "status-mod";
-            if (item.status === "Poor") statusClass = "status-poor";
-
-            // Membuat element list dinamis yang rapi kanan-kiri
-            const li = document.createElement('li');
-            li.className = "recommendation-item";
-            li.innerHTML = `<span class="room-name">${item.nama}</span> <span class="status-badge ${statusClass}">${item.status}</span>`;
-            listUl.appendChild(li);
-        }
+   for (let id in data) {
+    const item = data[id];
+    let statusClass = "status-good";
+    let dotClass = "dot-good"; // Tambahan variabel untuk peta
+    
+    if (item.status === "Moderate") {
+        statusClass = "status-mod";
+        dotClass = "dot-mod";
     }
-});
+    if (item.status === "Poor") {
+        statusClass = "status-poor";
+        dotClass = "dot-poor";
+    }
+
+    // [Kode update list tulisan Anda yang lama di sini ...]
+    const li = document.createElement('li');
+    li.className = "recommendation-item";
+    li.innerHTML = `<span class="room-name">${item.nama}</span> <span class="status-badge ${statusClass}">${item.status}</span>`;
+    listUl.appendChild(li);
+
+    // LOGIKA BARU: Update warna titik di peta berdasarkan ID ruangan
+    const buildingDot = document.querySelector(`#map-${id} .indicator-dot`);
+    if (buildingDot) {
+        // Reset kelas warna lama dan masukkan kelas warna terbaru dari Firebase
+        buildingDot.className = "indicator-dot " + dotClass;
+    }
+}
 
 // Fungsi Menguji Koneksi Mahasiswa
 async function checkConnection() {
