@@ -90,3 +90,100 @@
         <button onclick="masukAplikasi()" class="btn-primary" style="margin-top: 12px;">Masuk Aplikasi</button>
     </div>
 </div>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Map Sinyal FTUI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="map-container">
+        <!-- Header & Filter -->
+        <div class="map-header">
+            <h2>🗺️ Peta Sinyal & Keramaian FTUI</h2>
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterMap('semua')">Semua</button>
+                <button class="filter-btn sangaat-baik" onclick="filterMap('Sangat Baik')">🟢 Sangat Baik</button>
+                <button class="filter-btn baik" onclick="filterMap('Baik')">🟢 Baik</button>
+                <button class="filter-btn sedang" onclick="filterMap('Sedang')">🟠 Sedang</button>
+                <button class="filter-btn lemah" onclick="filterMap('Lemah')">🔴 Lemah</button>
+            </div>
+        </div>
+
+        <!-- Layout Grid Peta Gedung FTUI -->
+        <div class="building-grid">
+            <!-- DTSL -->
+            <div class="building-card" id="card-DTSL" onclick="pilihGedung('DTSL')">
+                <div class="signal-badge sangaat-baik" id="badge-DTSL">📶 78%</div>
+                <h3>DTSL</h3>
+                <p>Sipil & Lingkungan</p>
+            </div>
+
+            <!-- DTM -->
+            <div class="building-card" id="card-DTM" onclick="pilihGedung('DTM')">
+                <div class="signal-badge sangaat-baik" id="badge-DTM">📶 92%</div>
+                <h3>DTM</h3>
+                <p>Mesin</p>
+            </div>
+
+            <!-- DTE -->
+            <div class="building-card" id="card-DTE" onclick="pilihGedung('DTE')">
+                <div class="signal-badge sangaat-baik" id="badge-DTE">📶 81%</div>
+                <h3>DTE</h3>
+                <p>Elektro</p>
+            </div>
+
+            <!-- DA -->
+            <div class="building-card" id="card-DA" onclick="pilihGedung('DA')">
+                <div class="signal-badge sangaat-baik" id="badge-DA">📶 76%</div>
+                <h3>DA</h3>
+                <p>Arsitektur</p>
+            </div>
+
+            <!-- DTMM -->
+            <div class="building-card" id="card-DTMM" onclick="pilihGedung('DTMM')">
+                <div class="signal-badge sedang" id="badge-DTMM">📶 63%</div>
+                <h3>DTMM</h3>
+                <p>Metalurgi & Material</p>
+            </div>
+
+            <!-- DTK -->
+            <div class="building-card" id="card-DTK" onclick="pilihGedung('DTK')">
+                <div class="signal-badge sangaat-baik" id="badge-DTK">📶 85%</div>
+                <h3>DTK</h3>
+                <p>Kimia</p>
+            </div>
+
+            <!-- DTI -->
+            <div class="building-card" id="card-DTI" onclick="pilihGedung('DTI')">
+                <div class="signal-badge sangaat-baik" id="badge-DTI">📶 86%</div>
+                <h3>DTI</h3>
+                <p>Industri</p>
+            </div>
+
+            <!-- CCIT -->
+            <div class="building-card" id="card-CCIT" onclick="pilihGedung('CCIT')">
+                <div class="signal-badge sangaat-baik" id="badge-CCIT">📶 87%</div>
+                <h3>CCIT</h3>
+                <p>Gedung CCIT</p>
+            </div>
+
+            <!-- iCELL -->
+            <div class="building-card" id="card-ICELL" onclick="pilihGedung('ICELL')">
+                <div class="signal-badge sangaat-baik" id="badge-ICELL">📶 98%</div>
+                <h3>iCELL</h3>
+                <p>Integrated Lab</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase & Script -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+    <script src="script.js"></script>
+</body>
+</html>
