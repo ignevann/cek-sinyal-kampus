@@ -3,118 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cek Sinyal Kampus - FTUI</title>
+    <title>Sinyal Kampus Realtime</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- KOTAK 1: HALAMAN WELCOME (SAPAAN NAMA) -->
-    <div class="container" id="welcome-box">
-        <div class="card">
-            <div class="card-header">&lt;/&gt; FTUI NETWORK ASSISTANT</div>
-            <h2>Selamat Datang!</h2>
-            <p>Masukkan nama Anda untuk memulai pengecekan jaringan di lingkungan FTUI.</p>
-            <div class="form-group">
-                <input type="text" id="user-name" placeholder="Nama Anda (Misal: Angga)...">
-            </div>
-            <button class="btn-primary" onclick="masukKeAplikasi()">Masuk Aplikasi</button>
-        </div>
-    </div>
-
-    <!-- KOTAK 2: APLIKASI UTAMA (TERSEMBUNYI DEFAULT) -->
-    <div class="container" id="main-app-box" style="display: none;">
-        <h1 id="sapaan-user" style="text-align: center; margin-bottom: 20px;">👋 Halo!</h1>
+    <div class="container">
         
-        <!-- STATUS INDIKATOR KONEKSI USER -->
-        <div class="card">
-            <div class="card-header">&lt;/&gt; Live Connection Status</div>
-            <div class="card-content">
-                <div class="info-row">
-                    <span class="label">Signal</span>
-                    <span class="value" id="net-signal">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Latency</span>
-                    <span class="value" id="net-latency">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Packet Loss</span>
-                    <span class="value" id="net-loss">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Download</span>
-                    <span class="value" id="net-download">0 Mbps</span>
-                </div>
-                
-                <div class="readiness-section">
-                    <p class="section-title">Assessment Readiness</p>
-                    <p class="stars" id="net-stars">☆☆☆☆☆</p>
-                </div>
-                
-                <div class="alert" id="net-alert">Tekan tombol di bawah untuk menguji jaringan Anda.</div>
-            </div>
-            <button class="btn-primary" id="btn-check" onclick="checkConnection()">Cek Koneksi Jaringan</button>
+        <div class="header-title">
+            <h1>📶 Sinyal Kampus FTUI</h1>
+            <p>Pantau jaringan & keramaian lokasi real-time</p>
         </div>
 
-        <!-- DAFTAR KONDISI RUANGAN FTUI REAL-TIME -->
         <div class="card">
-            <div class="card-header">&lt;/&gt; FTUI Room Directory (Live Data)</div>
-            <h2>Rekomendasi Lokasi Sinyal</h2>
-            <ul id="ruangan-list">
-                <!-- Data dari Firebase akan masuk ke sini secara otomatis -->
-            </ul>
-        </div>
-
-        <!-- MAP VISUALISASI JARINGAN FTUI -->
-        <div class="card">
-            <div class="card-header">&lt;/&gt; FTUI Live Visual Map</div>
-            <h2>Peta Sinyal Gedung</h2>
-            <p style="font-size:13px; color:#666;">Indikator visual kondisi jaringan di beberapa titik lokasi FTUI.</p>
             
-            <div class="map-container">
-                <div class="map-building" id="map-gedung_k_lt1">
-                    <span class="building-tag">Gedung K Lt.1</span>
-                    <div class="indicator-dot"></div>
-                </div>
-                <div class="map-building" id="map-gedung_k_lt2">
-                    <span class="building-tag">Gedung K Lt.2</span>
-                    <div class="indicator-dot"></div>
-                </div>
-                <div class="map-building" id="map-gedung_s_lt1">
-                    <span class="building-tag">Gedung S Lt.1</span>
-                    <div class="indicator-dot"></div>
-                </div>
-                <div class="map-building" id="map-gedung_s_lt6">
-                    <span class="building-tag">Gedung S Lt.6</span>
-                    <div class="indicator-dot"></div>
-                </div>
-                <div class="map-building" id="map-kantin_ftui">
-                    <span class="building-tag">Kantin FTUI</span>
-                    <div class="indicator-dot"></div>
-                </div>
-                <div class="map-building" id="map-perpus_ftui">
-                    <span class="building-tag">Perpus FTUI</span>
-                    <div class="indicator-dot"></div>
+            <div class="form-group">
+                <label for="lokasi-anda">📍 Lokasi Anda Saat Ini:</label>
+                <select id="lokasi-anda" class="select-custom">
+                    <option value="area_b201">Area B-201</option>
+                    <option value="library_lt2">Library Lt. 2</option>
+                    <option value="lobby_eng">Lobby Engineering</option>
+                </select>
+            </div>
+
+            <!-- Tombol Cek -->
+            <button id="btn-check" onclick="checkConnection()">⚡ Cek Koneksi & Kirim Data</button>
+
+            <div class="card-header">
+                <span>⚡ Live Network Status</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Signal</span>
+                <span class="value" id="net-signal"><span class="status-badge status-good">Ready</span></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Latency</span>
+                <span class="value" id="net-latency">-</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Packet Loss</span>
+                <span class="value" id="net-loss">-</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Download</span>
+                <span class="value" id="net-download">-</span>
+            </div>
+            
+            <div class="readiness-section">
+                <p class="section-title">Kualitas Ujian Online</p>
+                <p class="stars" id="net-stars">⭐⭐⭐⭐⭐</p>
+                <div class="alert alert-success" id="net-alert">
+                    Tekan tombol di atas untuk tes jaringan & lokasi Anda.
                 </div>
             </div>
-        </div>
 
-        <button class="btn-secondary" onclick="kembaliKeWelcome()">← Keluar</button>
+            <!-- List Ruangan Realtime Firebase -->
+            <div class="recommendation-section">
+                <p class="section-title">📊 Status Area Real-Time:</p>
+                <ul id="ruangan-list" style="padding: 0; margin: 0;">
+                    <!-- Data Firebase dirender otomatis di sini -->
+                </ul>
+            </div>
+
+        </div>
+        
+        <a href="admin.html" class="admin-link">Masuk Panel Admin →</a>
     </div>
 
-    <!-- Firebase Core & Database Libraries -->
+    <!-- Firebase SDK -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
+
     <script src="script.js"></script>
 </body>
 </html>
-
-<!-- Tambahkan pilihan lokasi di atas tombol cek koneksi -->
-<div style="margin-bottom: 12px;">
-    <label for="lokasi-anda" style="font-size: 13px; font-weight: bold; color: #555;">Pilih Lokasi Anda Sekarang:</label>
-    <select id="lokasi-anda" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; margin-top: 5px; font-family: inherit;">
-        <option value="area_b201">Area B-201</option>
-        <option value="library_lt2">Library Lt. 2</option>
-        <option value="lobby_eng">Lobby Engineering</option>
-    </select>
-</div>
