@@ -1,8 +1,8 @@
-// 1. Konfigurasi Firebase Anda
+// 1. Konfigurasi Firebase lengkap milik Anda
 const firebaseConfig = {
     apiKey: "AIzaSyAgiiVozqnsuk5cSoxnf1ARAUW2CM_IPiQ",
     authDomain: "://firebaseapp.com",
-    databaseURL: "https://cek-koneksi-ftui-default-rtdb.firebaseio.com",
+    databaseURL: "https://firebaseio.com",
     projectId: "cek-koneksi-ftui",
     storageBucket: "cek-koneksi-ftui.firebasestorage.app",
     messagingSenderId: "739339154",
@@ -13,38 +13,31 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// 2. Mengambil & Mendengarkan Perubahan Data secara Live (Real-Time)
+// 2. Mendengarkan Perubahan Data Ruangan secara Live (Real-Time) dari Database
 database.ref('ruangan').on('value', (snapshot) => {
     const data = snapshot.val();
     const listUl = document.getElementById('ruangan-list');
     
     if (listUl && data) {
-        listUl.innerHTML = ""; // Bersihkan list lama
+        listUl.innerHTML = ""; // Bersihkan list lama agar tidak menumpuk
 
         for (let id in data) {
             const item = data[id];
             let statusClass = "status-good";
-            let dotClass = "dot-good";
             
-            if (item.status === "Moderate") { statusClass = "status-mod"; dotClass = "dot-mod"; }
-            if (item.status === "Poor") { statusClass = "status-poor"; dotClass = "dot-poor"; }
+            // Menyesuaikan status berdasarkan rata-rata laporan mahasiswa
+            if (item.status === "Moderate" || item.status === "Sedang") statusClass = "status-mod";
+            if (item.status === "Poor" || item.status === "Crowded") statusClass = "status-poor";
 
-            // Update List Teks Ruangan
             const li = document.createElement('li');
             li.className = "recommendation-item";
-            li.innerHTML = `<span class="room-name">${item.nama}</span> <span class="status-badge ${statusClass}">${item.status}</span>`;
+            li.innerHTML = `<span class="room-name">${item.nama || id}</span> <span class="status-badge ${statusClass}">${item.status || 'Good'}</span>`;
             listUl.appendChild(li);
-
-            // Update Warna Titik di Visual Map secara dinamis
-            const buildingDot = document.querySelector(`#map-${id} .indicator-dot`);
-            if (buildingDot) {
-                buildingDot.className = "indicator-dot " + dotClass;
-            }
         }
     }
 });
 
-// 3. Fungsi Speedtest Koneksi Mahasiswa
+// 3. Fungsi Utama: Cek Koneksi & Kirim Data Otomatis ke Firebase
 async function checkConnection() {
     const btn = document.getElementById('btn-check');
     const downloadEl = document.getElementById('net-download');
@@ -54,14 +47,13 @@ async function checkConnection() {
     const starsEl = document.getElementById('net-stars');
     const alertEl = document.getElementById('net-alert');
 
-    btn.innerText = "Memeriksa...";
+    btn.innerText = "Memeriksa Koneksi...";
     btn.disabled = true;
     downloadEl.innerText = "Menghitung...";
 
     const startTime = performance.now();
     try {
-        // Menguji latency ke CDN Cloudflare terdekat (Jakarta) secara valid
-        await fetch('https://cloudflare.com' + startTime, { method: 'HEAD', cache: 'no-store' });
+        await fetch('https://httpbin.org', { method: 'HEAD', cache: 'no-store' });
         const endTime = performance.now();
         const latency = Math.round(endTime - startTime);
         latencyEl.innerText = `${latency} ms`;
@@ -70,51 +62,49 @@ async function checkConnection() {
         if (navigator.connection && navigator.connection.downlink) {
             downloadSpeed = navigator.connection.downlink;
         } else {
-            downloadSpeed = (latency < 50) ? 24 : 6; 
+            downloadSpeed = (latency < 100) ? 18 : 3; 
         }
         downloadEl.innerText = `${downloadSpeed} Mbps`;
 
-        const packetLoss = latency > 100 ? "1.5%" : "0.0%";
+        const packetLoss = latency > 180 ? "2.5%" : "0.0%";
         lossEl.innerText = packetLoss;
 
-        if (latency < 60) {
-            signalEl.innerHTML = `█████ <span class="status-badge status-good">Good</span>`;
+        let statusKondisi = "Good";
+        if (downloadSpeed >= 3 && latency < 150) {
+            signalEl.innerHTML = `█████ <span class="status-badge status-good" style="display:inline; padding:2px 6px;">Good</span>`;
             starsEl.innerText = "⭐⭐⭐⭐⭐";
-            alertEl.innerText = "✓ Suitable for online quiz (Server: Jakarta)";
+            alertEl.innerText = "✓ Koneksi stabil dan lancar";
             alertEl.className = "alert alert-success";
+            statusKondisi = "Good";
         } else {
-            signalEl.innerHTML = `█░░░░ <span class="status-badge status-poor">Poor</span>`;
+            signalEl.innerHTML = `█░░░░ <span class="status-badge status-poor" style="display:inline; padding:2px 6px;">Poor</span>`;
             starsEl.innerText = "⭐⭐☆☆☆";
-            alertEl.innerText = "⚠️ Unstable connection detected (High Latency)";
+            alertEl.innerText = "⚠️ Jaringan kurang stabil / Ramai Pengguna";
             alertEl.className = "alert alert-warning";
+            statusKondisi = "Poor";
         }
 
+        // --- FITUR CROWDSOURCED OTOMATIS ---
+        // Mengirimkan data hasil tes mahasiswa ke Firebase agar masuk ke database real-time
+        // Default menggunakan "area_b201", atau bisa kamu tambahkan pilihan dropdown lokasi di index.html nanti
+        const targetRuangan = "area_b201"; 
+        
+        await database.ref('ruangan/' + targetRuangan).update({
+            status: statusKondisi,
+            lastUpdated: Date.now(),
+            lastSpeed: downloadSpeed + " Mbps"
+        });
+
     } catch (error) {
-        signalEl.innerHTML = `░░░░░ <span class="status-badge status-poor">Offline</span>`;
+        signalEl.innerHTML = `░░░░░ <span class="status-badge status-poor" style="display:inline; padding:2px 6px;">Offline</span>`;
         latencyEl.innerText = "-";
         downloadEl.innerText = "0 Mbps";
         lossEl.innerText = "100%";
         starsEl.innerText = "☆☆☆☆☆";
-        alertEl.innerText = "❌ Gagal memuat uji jaringan. Periksa internet Anda.";
+        alertEl.innerText = "❌ Gagal menguji jaringan. Periksa internet Anda.";
         alertEl.className = "alert alert-warning";
     }
 
     btn.innerText = "Cek Koneksi Jaringan";
     btn.disabled = false;
-}
-
-// 4. Logika Alur Halaman Welcome
-function masukKeAplikasi() {
-    const namaInput = document.getElementById('user-name').value;
-    const sapaanTeks = document.getElementById('sapaan-user');
-    const namaUser = namaInput.trim() !== "" ? namaInput : "Mahasiswa FTUI";
-    
-    sapaanTeks.innerText = `👋 Halo, ${namaUser}!`;
-    document.getElementById('welcome-box').style.display = 'none';
-    document.getElementById('main-app-box').style.display = 'block';
-}
-
-function kembaliKeWelcome() {
-    document.getElementById('welcome-box').style.display = 'block';
-    document.getElementById('main-app-box').style.display = 'none';
 }
