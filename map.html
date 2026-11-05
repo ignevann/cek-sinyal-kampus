@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Map - Sinyal Kampus FTUI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="map-container" style="max-width: 900px; margin: 30px auto; background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 30px; border-radius: 20px;">
+        
+        <div class="map-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="color: #fff;">🗺️ Peta Sinyal & Keramaian FTUI</h2>
+            <a href="main.html" style="color: #38bdf8; text-decoration: none; font-size: 14px; font-weight: bold;">← Kembali ke Cek Jaringan</a>
+        </div>
+
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterMap('semua')">Semua</button>
+            <button class="filter-btn sangaat-baik" onclick="filterMap('Sangat Baik')">🟢 Sangat Baik</button>
+            <button class="filter-btn sedang" onclick="filterMap('Sedang')">🟠 Sedang</button>
+            <button class="filter-btn lemah" onclick="filterMap('Lemah')">🔴 Lemah</button>
+        </div>
+
+        <!-- Grid Gedung FTUI -->
+        <div class="building-grid">
+            <div class="building-card" id="card-DTSL">
+                <div class="signal-badge sangaat-baik" id="badge-DTSL">📶 78%</div>
+                <h3 style="color: #0f172a;">DTSL</h3>
+                <p>Sipil & Lingkungan</p>
+            </div>
+            <div class="building-card" id="card-DTM">
+                <div class="signal-badge sangaat-baik" id="badge-DTM">📶 92%</div>
+                <h3 style="color: #0f172a;">DTM</h3>
+                <p>Mesin</p>
+            </div>
+            <div class="building-card" id="card-DTE">
+                <div class="signal-badge sangaat-baik" id="badge-DTE">📶 81%</div>
+                <h3 style="color: #0f172a;">DTE</h3>
+                <p>Elektro</p>
+            </div>
+            <div class="building-card" id="card-DA">
+                <div class="signal-badge sangaat-baik" id="badge-DA">📶 76%</div>
+                <h3 style="color: #0f172a;">DA</h3>
+                <p>Arsitektur</p>
+            </div>
+            <div class="building-card" id="card-DTMM">
+                <div class="signal-badge sedang" id="badge-DTMM">📶 63%</div>
+                <h3 style="color: #0f172a;">DTMM</h3>
+                <p>Metalurgi & Material</p>
+            </div>
+            <div class="building-card" id="card-DTK">
+                <div class="signal-badge sangaat-baik" id="badge-DTK">📶 85%</div>
+                <h3 style="color: #0f172a;">DTK</h3>
+                <p>Kimia</p>
+            </div>
+            <div class="building-card" id="card-DTI">
+                <div class="signal-badge sangaat-baik" id="badge-DTI">📶 86%</div>
+                <h3 style="color: #0f172a;">DTI</h3>
+                <p>Industri</p>
+            </div>
+            <div class="building-card" id="card-CCIT">
+                <div class="signal-badge sangaat-baik" id="badge-CCIT">📶 87%</div>
+                <h3 style="color: #0f172a;">CCIT</h3>
+                <p>Gedung CCIT</p>
+            </div>
+            <div class="building-card" id="card-ICELL">
+                <div class="signal-badge sangaat-baik" id="badge-ICELL">📶 98%</div>
+                <h3 style="color: #0f172a;">iCELL</h3>
+                <p>Integrated Lab</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Script -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+    <script src="script.js"></script>
+</body>
+</html>
