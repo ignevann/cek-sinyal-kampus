@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Jaringan - Sinyal Kampus FTUI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="header-title">
+            <h1>📶 Sinyal Kampus FTUI</h1>
+            <p id="sapaan-user">Halo, Mahasiswa!</p>
+        </div>
+
+        <div class="card">
+            <div class="form-group">
+                <label for="lokasi-anda">📍 Lokasi Anda Saat Ini:</label>
+                <select id="lokasi-anda" class="select-custom">
+                    <option value="area_b201">Area B-201</option>
+                    <option value="library_lt2">Library Lt. 2</option>
+                    <option value="lobby_eng">Lobby Engineering</option>
+                </select>
+            </div>
+
+            <button id="btn-check" onclick="checkConnection()">⚡ Cek Koneksi & Kirim Data</button>
+
+            <div class="card-header">
+                <span>⚡ Live Network Status</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Signal</span>
+                <span class="value" id="net-signal"><span class="status-badge status-good">Ready</span></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Latency</span>
+                <span class="value" id="net-latency">-</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Packet Loss</span>
+                <span class="value" id="net-loss">-</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Download</span>
+                <span class="value" id="net-download">-</span>
+            </div>
+            
+            <div class="readiness-section">
+                <p class="section-title">Kualitas Ujian Online</p>
+                <p class="stars" id="net-stars">⭐⭐⭐⭐⭐</p>
+                <div class="alert alert-success" id="net-alert">
+                    Tekan tombol di atas untuk tes jaringan & lokasi Anda.
+                </div>
+            </div>
+
+            <div class="recommendation-section">
+                <p class="section-title">📊 Status Area Real-Time:</p>
+                <ul id="ruangan-list" style="padding: 0; margin: 0;">
+                    <!-- Data Firebase -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tombol Navigasi ke Peta Visual -->
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="map.html" style="background: rgba(255,255,255,0.1); color: #38bdf8; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold; display: inline-block; border: 1px solid rgba(255,255,255,0.15);">🗺️ Buka Visual Map Kampus →</a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+    <script src="script.js"></script>
+    <script>
+        // Tampilkan nama user yang di-input dari halaman sebelumnya
+        const savedName = localStorage.getItem('namaUser');
+        if (savedName) {
+            document.getElementById('sapaan-user').innerText = `Halo, ${savedName}! Pantau jaringan & keramaian real-time`;
+        }
+    </script>
+</body>
+</html>
