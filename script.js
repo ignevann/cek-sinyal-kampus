@@ -108,3 +108,46 @@ async function checkConnection() {
     btn.innerText = "Cek Koneksi Jaringan";
     btn.disabled = false;
 }
+
+// Mengambil data real-time dari Firebase untuk Peta Gedung
+database.ref('gedung').on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (!data) return;
+
+    for (let gedungId in data) {
+        const info = data[gedungId]; // misal: { persentase: 85, status: 'Baik' }
+        const badgeEl = document.getElementById(`badge-${gedungId}`);
+
+        if (badgeEl) {
+            badgeEl.innerText = `📶 ${info.persentase}%`;
+            
+            // Atur warna badge berdasarkan kualitas
+            badgeEl.className = 'signal-badge ';
+            if (info.persentase >= 75) badgeEl.classList.add('sangaat-baik');
+            else if (info.persentase >= 50) badgeEl.classList.add('sedang');
+            else badgeEl.classList.add('lemah');
+        }
+    }
+});
+
+// Fungsi Filter Gedung di Peta
+function filterMap(kategori) {
+    const cards = document.querySelectorAll('.building-card');
+    
+    // Update tombol filter aktif
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    cards.forEach(card => {
+        const badge = card.querySelector('.signal-badge');
+        if (kategori === 'semua') {
+            card.style.display = 'block';
+        } else {
+            if (badge.classList.contains(kategori.toLowerCase().replace(' ', '-'))) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        }
+    });
+}
