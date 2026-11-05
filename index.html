@@ -3,187 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sinyal Kampus Realtime</title>
+    <title>Welcome - Sinyal Kampus FTUI</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        
-        <div class="header-title">
-            <h1>📶 Sinyal Kampus FTUI</h1>
-            <p>Pantau jaringan & keramaian lokasi real-time</p>
-        </div>
-
-        <div class="card">
+    <div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 90vh;">
+        <div class="card" style="width: 100%; max-width: 420px; text-align: center;">
+            <p class="card-header" style="justify-content: center; margin-bottom: 12px;">&lt;/&gt; FTUI NETWORK ASSISTANT</p>
             
-            <div class="form-group">
-                <label for="lokasi-anda">📍 Lokasi Anda Saat Ini:</label>
-                <select id="lokasi-anda" class="select-custom">
-                    <option value="area_b201">Area B-201</option>
-                    <option value="library_lt2">Library Lt. 2</option>
-                    <option value="lobby_eng">Lobby Engineering</option>
-                </select>
-            </div>
-
-            <!-- Tombol Cek -->
-            <button id="btn-check" onclick="checkConnection()">⚡ Cek Koneksi & Kirim Data</button>
-
-            <div class="card-header">
-                <span>⚡ Live Network Status</span>
-            </div>
-
-            <div class="info-row">
-                <span class="label">Signal</span>
-                <span class="value" id="net-signal"><span class="status-badge status-good">Ready</span></span>
-            </div>
-            <div class="info-row">
-                <span class="label">Latency</span>
-                <span class="value" id="net-latency">-</span>
-            </div>
-            <div class="info-row">
-                <span class="label">Packet Loss</span>
-                <span class="value" id="net-loss">-</span>
-            </div>
-            <div class="info-row">
-                <span class="label">Download</span>
-                <span class="value" id="net-download">-</span>
-            </div>
+            <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 10px; color: #fff;">Selamat Datang!</h2>
+            <p style="font-size: 13px; color: #94a3b8; margin-bottom: 24px; line-height: 1.5;">
+                Masukkan nama Anda untuk memulai pengecekan kualitas jaringan dan kondisi keramaian di lingkungan FTUI.
+            </p>
             
-            <div class="readiness-section">
-                <p class="section-title">Kualitas Ujian Online</p>
-                <p class="stars" id="net-stars">⭐⭐⭐⭐⭐</p>
-                <div class="alert alert-success" id="net-alert">
-                    Tekan tombol di atas untuk tes jaringan & lokasi Anda.
-                </div>
+            <div class="form-group" style="text-align: left;">
+                <label for="input-nama">Nama Lengkap / Panggilan:</label>
+                <input type="text" id="input-nama" placeholder="Contoh: Angga" class="select-custom" required>
             </div>
 
-            <!-- List Ruangan Realtime Firebase -->
-            <div class="recommendation-section">
-                <p class="section-title">📊 Status Area Real-Time:</p>
-                <ul id="ruangan-list" style="padding: 0; margin: 0;">
-                    <!-- Data Firebase dirender otomatis di sini -->
-                </ul>
-            </div>
-
-        </div>
-        
-        <a href="admin.html" class="admin-link">Masuk Panel Admin →</a>
-    </div>
-
-    <!-- Firebase SDK -->
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
-
-    <script src="script.js"></script>
-</body>
-</html>
-
-<!-- Modal Selamat Datang -->
-<div id="welcome-modal" class="modal-overlay">
-    <div class="modal-content">
-        <p class="modal-tag">&lt;/&gt; FTUI NETWORK ASSISTANT</p>
-        <h2>Selamat Datang!</h2>
-        <p>Masukkan nama Anda untuk memulai pengecekan jaringan di lingkungan FTUI.</p>
-        
-        <input type="text" id="input-nama" placeholder="Masukkan nama Anda..." class="select-custom">
-        <button onclick="masukAplikasi()" class="btn-primary" style="margin-top: 12px;">Masuk Aplikasi</button>
-    </div>
-</div>
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visual Map Sinyal FTUI</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-    <div class="map-container">
-        <!-- Header & Filter -->
-        <div class="map-header">
-            <h2>🗺️ Peta Sinyal & Keramaian FTUI</h2>
-            <div class="filter-bar">
-                <button class="filter-btn active" onclick="filterMap('semua')">Semua</button>
-                <button class="filter-btn sangaat-baik" onclick="filterMap('Sangat Baik')">🟢 Sangat Baik</button>
-                <button class="filter-btn baik" onclick="filterMap('Baik')">🟢 Baik</button>
-                <button class="filter-btn sedang" onclick="filterMap('Sedang')">🟠 Sedang</button>
-                <button class="filter-btn lemah" onclick="filterMap('Lemah')">🔴 Lemah</button>
-            </div>
-        </div>
-
-        <!-- Layout Grid Peta Gedung FTUI -->
-        <div class="building-grid">
-            <!-- DTSL -->
-            <div class="building-card" id="card-DTSL" onclick="pilihGedung('DTSL')">
-                <div class="signal-badge sangaat-baik" id="badge-DTSL">📶 78%</div>
-                <h3>DTSL</h3>
-                <p>Sipil & Lingkungan</p>
-            </div>
-
-            <!-- DTM -->
-            <div class="building-card" id="card-DTM" onclick="pilihGedung('DTM')">
-                <div class="signal-badge sangaat-baik" id="badge-DTM">📶 92%</div>
-                <h3>DTM</h3>
-                <p>Mesin</p>
-            </div>
-
-            <!-- DTE -->
-            <div class="building-card" id="card-DTE" onclick="pilihGedung('DTE')">
-                <div class="signal-badge sangaat-baik" id="badge-DTE">📶 81%</div>
-                <h3>DTE</h3>
-                <p>Elektro</p>
-            </div>
-
-            <!-- DA -->
-            <div class="building-card" id="card-DA" onclick="pilihGedung('DA')">
-                <div class="signal-badge sangaat-baik" id="badge-DA">📶 76%</div>
-                <h3>DA</h3>
-                <p>Arsitektur</p>
-            </div>
-
-            <!-- DTMM -->
-            <div class="building-card" id="card-DTMM" onclick="pilihGedung('DTMM')">
-                <div class="signal-badge sedang" id="badge-DTMM">📶 63%</div>
-                <h3>DTMM</h3>
-                <p>Metalurgi & Material</p>
-            </div>
-
-            <!-- DTK -->
-            <div class="building-card" id="card-DTK" onclick="pilihGedung('DTK')">
-                <div class="signal-badge sangaat-baik" id="badge-DTK">📶 85%</div>
-                <h3>DTK</h3>
-                <p>Kimia</p>
-            </div>
-
-            <!-- DTI -->
-            <div class="building-card" id="card-DTI" onclick="pilihGedung('DTI')">
-                <div class="signal-badge sangaat-baik" id="badge-DTI">📶 86%</div>
-                <h3>DTI</h3>
-                <p>Industri</p>
-            </div>
-
-            <!-- CCIT -->
-            <div class="building-card" id="card-CCIT" onclick="pilihGedung('CCIT')">
-                <div class="signal-badge sangaat-baik" id="badge-CCIT">📶 87%</div>
-                <h3>CCIT</h3>
-                <p>Gedung CCIT</p>
-            </div>
-
-            <!-- iCELL -->
-            <div class="building-card" id="card-ICELL" onclick="pilihGedung('ICELL')">
-                <div class="signal-badge sangaat-baik" id="badge-ICELL">📶 98%</div>
-                <h3>iCELL</h3>
-                <p>Integrated Lab</p>
-            </div>
+            <button id="btn-check" onclick="masukAplikasi()" style="margin-top: 10px;">
+                🚀 Masuk Aplikasi
+            </button>
         </div>
     </div>
 
-    <!-- Firebase & Script -->
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
-    <script src="script.js"></script>
+    <script>
+        // Fungsi untuk mengecek input nama dan pindah ke halaman main.html
+        function masukAplikasi() {
+            const namaInput = document.getElementById('input-nama').value.trim();
+
+            if (namaInput === "") {
+                alert("Silakan masukkan nama Anda terlebih dahulu!");
+                return;
+            }
+
+            // Menyimpan nama ke browser agar halaman main.html bisa menyapa nama mahasiswa
+            localStorage.setItem('namaUser', namaInput);
+
+            // Mengarahkan pengguna ke halaman utama pengecekan sinyal
+            window.location.href = "main.html";
+        }
+
+        // Jalankan fungsi jika pengguna menekan tombol "Enter" di keyboard
+        document.getElementById('input-nama').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                masukAplikasi();
+            }
+        });
+    </script>
 </body>
 </html>
